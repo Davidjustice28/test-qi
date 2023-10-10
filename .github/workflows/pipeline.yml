@@ -31,4 +31,4 @@ jobs:
           chmod +x .github/workflows/qualiti-script.sh
 
           # Replace the placeholders with the provided credentials in your Qualiti AI Portal. It is advised to use best practices with sensitive credentials
-          . .github/workflows/qualiti-script.sh a4abb20c381c449f 2b4c488f6a644d273c9e1d5706b740c1
+          . .github/workflows/qualiti-script.sh 97d686b74f88a9ae 8ba2c1099485cf7ac1070cb0ec4ad324

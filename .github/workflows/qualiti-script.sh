@@ -13,7 +13,7 @@ set -ex
 
 API_KEY=$1
 CLIENT_ID=$2
-BASE_API_URL='https://api.qualiti-dev.com'
+BASE_API_URL='https://3000-qualitiai-qualitiapi-997akck0766.ws-us105.gitpod.io'
 
 if hash apt-get 2>/dev/null; then
   if [ "$(id -u)" -ne 0 ] && hash sudo 2>/dev/null; then
@@ -71,3 +71,4 @@ if [ "$STATUS" = "Passed" ]; then
 fi
 
 exit 1
+t 1

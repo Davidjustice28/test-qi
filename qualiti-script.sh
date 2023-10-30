@@ -10,14 +10,8 @@ API_KEY=$1
 CLIENT_ID=$2
 BASE_API_URL='https://api.qualiti-dev.com'
 
-if hash apt-get 2>/dev/null; then
-  if [ "$(id -u)" -ne 0 ] && hash sudo 2>/dev/null; then
-    sudo apt-get update -y
-    sudo apt-get install -y jq curl
-  else
-    apt-get update -y && apt-get install -y jq curl
-  fi
-fi
+sudo apt-get update -y
+sudo apt-get install -y jq curl  
 
 AUTH_TOKEN="$( \
   curl -s -X POST -G "$BASE_API_URL/public/api-keys/token" \

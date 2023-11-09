@@ -1,19 +1,14 @@
 #!/bin/sh
-
 set -ex
 
-#######################################################################################
-# Trigger a test run from a plan using bash                                           #
-# Usage: ./qualiti-script.sh <api-key> <client-id>                                    #
-#######################################################################################
-
-# TODO:
-# Does our test-run-status passing in test_run_id and token still work with our new setup of using test case history items?
-# Update all other sh files to do a similar setup
+#####################################################
+# Trigger a test run from a plan using bash         #
+# Usage: ./qualiti-script.sh <api-key> <client-id>  #
+#####################################################
 
 API_KEY=$1
 CLIENT_ID=$2
-BASE_API_URL='https://3000-qualitiai-qualitiapi-997akck0766.ws-us105.gitpod.io'
+BASE_API_URL='https://api.qualiti-dev.com'
 
 if hash apt-get 2>/dev/null; then
   if [ "$(id -u)" -ne 0 ] && hash sudo 2>/dev/null; then
@@ -25,14 +20,14 @@ if hash apt-get 2>/dev/null; then
 fi
 
 AUTH_TOKEN="$( \
-  curl -X POST -G "$BASE_API_URL/public/api-keys/token" \
+  curl -s -X POST -G "$BASE_API_URL/public/api-keys/token" \
   -H "x-api-key: $API_KEY" \
   -H "client-id: $CLIENT_ID" \
   | jq -r '.token')"
 
 # Trigger test run
 TEST_RUN_ID="$( \
-curl -X POST -G "$BASE_API_URL/integrations/github/3/trigger-test-run" \
+curl -s -X POST -G "$BASE_API_URL/integrations/github/276/trigger-test-run" \
   -d 'token='$AUTH_TOKEN''\
   -d 'triggeredBy=automatic'\
   -d 'triggerType=Deploy'\
@@ -49,20 +44,20 @@ I=1
 STATUS='Pending'
 
 while [ "$STATUS" = 'Pending' ]; do
-if [ "$I" -ge "$TOTAL_ITERATION" ]; then
-  echo 'Exit Qualiti execution; taking too long.'
-  exit 1
-fi
-echo "We are on iteration $I"
+  if [ "$I" -ge "$TOTAL_ITERATION" ]; then
+    echo 'Exit Qualiti execution; taking too long.'
+    exit 1
+  fi
+  echo "We are on iteration $I"
 
-STATUS="$( \
-  curl -X GET "$BASE_API_URL/integrations/github/3/test-run-status?token=$AUTH_TOKEN&testRunId=$TEST_RUN_ID" \
-    | jq -r '.status' \
-)"
+  STATUS="$( \
+    curl -s "$BASE_API_URL/integrations/github/276/test-run-status?token=$AUTH_TOKEN&testRunId=$TEST_RUN_ID" \
+      | jq -r '.status' \
+  )"
 
-I=$((I+1))
+  I=$((I+1))
 
-sleep 15
+  sleep 15
 done
 
 echo "Qualiti E2E Tests returned $STATUS"
@@ -71,4 +66,3 @@ if [ "$STATUS" = "Passed" ]; then
 fi
 
 exit 1
-

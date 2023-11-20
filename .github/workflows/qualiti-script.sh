@@ -30,7 +30,7 @@ TEST_RUN_ID="$( \
 curl -s -X POST -G "$BASE_API_URL/integrations/github/19/trigger-test-run" \
   -d 'token='$AUTH_TOKEN''\
   -d 'triggeredBy=automatic'\
-  -d 'triggerType=Deploy'\
+  -d 'triggerType=Build'\
 | jq -r '.test_run_ids[0]')"
 
 if [ "$TEST_RUN_ID" = null ] || [ -z "$TEST_RUN_ID" ]; then
